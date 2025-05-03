@@ -1,0 +1,9 @@
+site_name: DevSecOps-lab-docs
+theme:
+    name: readthedocs
+nav:
+    - Parte 0 - Introduzione: Personale/Laboratorio DevSecOps/Parte 0 - Introduzione/Introduzione.md
+    - Parte 1 - Preparazione ambiente:
+        - Parte 1.1 - Creazione ed installazione VM: Personale/Laboratorio DevSecOps/Parte 1 - Preparazione ambiente/Parte 1.1 - Creazione ed installazione VM.md
+        - Parte 1.2 - Accesso SSH e snapshot: Personale/Laboratorio DevSecOps/Parte 1 - Preparazione ambiente/Parte 1.2 - Accesso SSH e snapshot.md
+        - Parte 1.3 - Documentazione e repository: Personale/Laboratorio DevSecOps/Parte 1 - Preparazione ambiente/Parte 1.3 - Documentazione e repository.md
