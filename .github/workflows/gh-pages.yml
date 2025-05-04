@@ -21,7 +21,7 @@ jobs:
       - run: pip install mkdocs mkdocs-material
       - run: mkdocs build -d site          # genera ./site
 
-      - uses: actions/upload-pages-artifact@v2
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: ./site                     # carica artifact
 
@@ -33,4 +33,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
