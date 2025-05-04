@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../../img/favicon.ico" />
+    <title>Parte 1.1 - Creazione ed installazione VM - DevSecOps-lab-docs</title>
+    <link rel="stylesheet" href="../../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Parte 1.1 - Creazione ed installazione VM";
+        var mkdocs_page_input_path = "Personale/Laboratorio DevSecOps/Parte 1 - Preparazione ambiente/Parte 1.1 - Creazione ed installazione VM.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../../.." class="icon icon-home"> DevSecOps-lab-docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../Parte%200%20-%20Introduzione/Introduzione/">Parte 0 - Introduzione</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Parte 1 - Preparazione ambiente</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Parte 1.1 - Creazione ed installazione VM</a>
+    <ul class="current">
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Parte%201.2%20-%20Accesso%20SSH%20e%20snapshot/">Parte 1.2 - Accesso SSH e snapshot</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Parte%201.3%20-%20Documentazione%20e%20repository/">Parte 1.3 - Documentazione e repository</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../..">DevSecOps-lab-docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Parte 1 - Preparazione ambiente</li>
+      <li class="breadcrumb-item active">Parte 1.1 - Creazione ed installazione VM</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <p>In questa sezione espongo come ho deciso di strutturare l'ambiente in base alle risorse disponibile e come ho installato le Virtual Machine (VM) che ospiteranno il laboratorio.</p>
+<p>Il computer che ospiterà le VM con il cluster k8s ha le seguenti caratteristiche:</p>
+<ul>
+<li>Ryzen 5 5600X</li>
+<li>64Gb RAM</li>
+<li>220Gb SSD</li>
+<li>465Gb HDD</li>
+<li>Windows 11 24H2</li>
+</ul>
+<h2 id="installazione-virtualizzatore-e-vm">Installazione virtualizzatore e VM</h2>
+<p>Come prima cosa ho installato Virtualbox (https://www.virtualbox.org/wiki/Downloads) v7.1.8 sul disco contente il sistema operativo (SO):</p>
+<ul>
+<li>Seguito il setup senza cambiare niente, alla fine ho ottenuto il seguente errore (sono comunque andato avanti).<br />
+<img alt="1f404c710191bbdd22dfc3f098f017e2.png" src="../../../../_resources/1f404c710191bbdd22dfc3f098f017e2.png" /></li>
+<li>Creata la cartella "VirtualBox VMs" su SSD dedicato al progetto e l'ho impostata come cartella predefinita per le macchine.</li>
+</ul>
+<p>Una volta installato Virtualbox ho creato ed installato il SO per le tre VM necessarie per il cluster:</p>
+<ul>
+<li>Scaricato Ubuntu server 24.04.2 LTS (versione server per avere solo la CLI).</li>
+<li>Ridotto range del DHCP sul router in modo da dare indirizzi statici alle macchine.</li>
+<li>VM chiamate Control plane node 01, Worker node 01 e Worker node 02. Saltata l'installazione non supervisionata.</li>
+<li>Fornite 3 CPU e 16384MB (16Gb) RAM, 60GB SSD (crea un disco virtuale ora).</li>
+<li>Impostata scheda di rete con bridge<br />
+<img alt="c19be9a2b34b199321a6ac8c14b1b188.png" src="../../../../_resources/c19be9a2b34b199321a6ac8c14b1b188.png" /></li>
+<li>Avviata VM ma ho ottenuto un errore.<ul>
+<li>Attivato virtualizzatore (cercare la procedura in base al proprio processore, cambia tra Intel e AMD ed in base alla scheda madre perché bisogna andare nel BIOS):<br />
+<img alt="c00e7e996e71d41eff8cb49356f3bf37.png" src="../../../../_resources/c00e7e996e71d41eff8cb49356f3bf37.png" /></li>
+</ul>
+</li>
+<li>Avviata nuovamente la VM e seguito il setup del SO. Scelto layout italiano e lingua inglese, per le impostazioni di rete ho selezionato l'unica interfaccia che avevo disponibile ed inserita come subnet la rete di casa (/24 come suffisso, quindi utilizzato il .0 come indirizzo), come indirizzo ho inserito uno di quelli tolti dal range del DHCP (altrimenti se utilizzato uno che può essere assegnato anche dal DHCP è possibile avere un IP duplicato nella LAN), come gateway e name servers inserito l'IP del router, questo perché è configurato come DNS proxy (altrimenti è possibile mettere come DNS gli IP di Cloudflare o Google).<br />
+    Non impostato né proxy né lvm, hostname (così come username e password) scelto a piacimento, no ubuntu pro, no ssh, no pacchetti selezionati e fatto reboot a fine installazione (da delle failed quando si riavvia ma poi parte premendo invio)</li>
+</ul>
+<p>Se non si passa la verifica del mirror significa che ci sono problemi di rete, nel mio caso non avevo messa scheda con bridge alla VM e quindi non andava bene l'IP statico che ho configurato con la scheda di rete assegnata alla VM. L'installazione del SO sulla VM in questione è stata completata con successo dopo aver modificato la scheda ma all'avvio veniva generato un errore di connessione all'url per il check degli aggiornamenti (la connettività ad internet era presente e funzionate), ho eliminato la VM e rifatto tutto da capo, il problema si è risolto.</p>
+<h2 id="test-aggiornamento-so-ed-installazione-guest-addition">Test, aggiornamento SO ed installazione Guest Addition</h2>
+<ul>
+<li>Acceduto correttamente con username e password impostati, pingato 8.8.8.8 con successo.</li>
+<li>Aggiornato tutti i pacchetti:<ul>
+<li>sudo apt-get update</li>
+<li>sudo apt-get upgrade -y</li>
+<li>sudo apt-get dist-upgrade -y</li>
+<li>sudo apt-get autoremove -y</li>
+<li>sudo apt-get install unattended-upgrades</li>
+<li>sudo apt-get clean</li>
+<li>reboot</li>
+</ul>
+</li>
+</ul>
+<h3 id="installazione-guest-additions-opzionale">Installazione Guest Additions (opzionale)</h3>
+<p>Non vado nel dettaglio perché questo passaggio è necessario se viene installata una GUI e se viene utilizzata la shell che si apre avviando la VM da virtualbox.<br />
+Ho scelto successivamente di utilizzare mRemoteNG per la connessione SSH alle macchine, avrei potuto saltare questo passaggio.</p>
+<ul>
+<li>
+<p>sudo apt-get update</p>
+</li>
+<li>
+<p>sudo apt-get upgrade -y</p>
+</li>
+<li>
+<p>sudo apt-get install -y build-essential dkms linux-headers-$(uname -r)</p>
+</li>
+<li>
+<p><img alt="5ebbfcddb518bf0c1cc2a68cebe23c5f.png" src="../../../../_resources/5ebbfcddb518bf0c1cc2a68cebe23c5f.png" /></p>
+</li>
+<li>
+<p>sudo mkdir /media/cdrom</p>
+</li>
+<li>
+<p>sudo mount /dev/cdrom /media/cdrom</p>
+</li>
+<li>
+<p>sudo /media/cdrom/VBoxLinuxAdditions.run</p>
+</li>
+<li>
+<p>lsmod | grep vbox</p>
+<ul>
+<li>vboxguest</li>
+<li>vboxsf</li>
+<li>vboxvideo</li>
+<li>sudo reboot</li>
+</ul>
+</li>
+</ul>
+<h2 id="installazione-kali-linux">Installazione Kali Linux</h2>
+<p>Su un altro computer ho installato la VM con Kali Linux:</p>
+<ul>
+<li>Scaricata ISO da https://www.kali.org/get-kali/#kali-installer-images (quello raccomandato).</li>
+<li>Creata VM con 4 CPU, 8Gb RAM, scheda di rete bridge.</li>
+<li>Non impostato dominio, no lvm (unica partizione).</li>
+<li>Per i pacchetti ho lasciato quello che era selezionato (xfce).</li>
+<li>Aggiornati tutti i pacchetti (vedi comandi utilizzati per Ubuntu server).</li>
+<li>Settato ip statico con nmtui (stessa logica utilizzata per Ubuntu server).</li>
+<li>Installati Guest Addons (stessa procedura esposta precedentemente), l'unica differenza è che sudo apt install build-essential dkms linux-headers-$(uname -r) non funziona perché il kernel non è aggiornato, aggiornarlo con il comando apt-get full-upgrade -y. Il comando lsmod mostrerà soltanto i moduli vboxguest e vboxsf, il servizio vboxaddservice-service è in failed (problema non bloccante, non l'ho risolto). Testato copia/incolla da host windows e ridimensionamento, funziona tutto correttamente.</li>
+</ul>
+<h2 id="passwordless-sudo">Passwordless sudo</h2>
+<p>Per praticità ho fatto in modo che il mio utente potesse utilizzare sudo senza aver bisogno di inserire la password. Ho modificato il file /etc/sudoers aggiungendo in fondo la seguente riga:</p>
+<p>nox ALL=(ALL) NOPASSWD: ALL</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../Parte%200%20-%20Introduzione/Introduzione/" class="btn btn-neutral float-left" title="Parte 0 - Introduzione"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../Parte%201.2%20-%20Accesso%20SSH%20e%20snapshot/" class="btn btn-neutral float-right" title="Parte 1.2 - Accesso SSH e snapshot">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../Parte%200%20-%20Introduzione/Introduzione/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../Parte%201.2%20-%20Accesso%20SSH%20e%20snapshot/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../../..";</script>
+    <script src="../../../../js/theme_extra.js"></script>
+    <script src="../../../../js/theme.js"></script>
+      <script src="../../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
