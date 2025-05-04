@@ -1,32 +1,36 @@
-name: Deploy docs   # scelto a piacimento
-
+name: Deploy docs to GitHub Pages
 on:
   push:
-    branches: [ main ]   # si attiva ad ogni push sul main aggiornando quindi la docs
+    branches: [ main ]
+
+permissions:
+  contents: read       # per checkout
+  pages: write         # per deploy
+  id-token: write      # per OIDC authentication
 
 jobs:
-  build-deploy:
-    runs-on: ubuntu-latest   # eseguito su un runner effimero con OS ubuntu-latest
-
+  build:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4   # clona il repo sul runner, e' del tipo owner/repo@version
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v4   # installa il python, versione specificata sotto, sul runner
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: 3.11
 
-      - name: Install MkDocs + theme   # installa mkdocs
-        run: |
-          pip install mkdocs mkdocs-material
+      - run: pip install mkdocs mkdocs-material
+      - run: mkdocs build -d site          # genera ./site
 
-      - name: Build site   # converte i markdown in HTML e lo mette in site/, --strict fallisce se link non funzionano, se il .nav contiene errori o se ci sono file mancanti
-        run: |
-          mkdocs build --strict
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3   # committo site/ sul branch gh-pages che hosta il webiste con la docs
+      - uses: actions/upload-pages-artifact@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}   # lo inietta github
-          publish_dir: ./site   # pubblica /site
+          path: ./site                     # carica artifact
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v2
